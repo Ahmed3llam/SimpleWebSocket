@@ -1,0 +1,42 @@
+﻿@model List<Emp>;
+<h2 class="text-center mt-0">Emps</h2>
+<br />
+<a asp-action="AddEmp" asp-controller="Emp" class="btn btn-primary mt-3">Add Emp</a>
+<br />
+<table class="table table-bordered table-hover text-center table-responsive mt-3 ">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody id="body">
+        @foreach (Emp item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Age</td>
+                <td>@item.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+        con = new signalR.HubConnectionBuilder().withUrl("/emp").build();
+        con.start();
+        con.on("newemp", function (emp) {
+            alert(JSON.stringify(emp))
+            $("#body").append(`
+                <tr>
+                    <td>${emp.name}</td>
+                    <td>${emp.age}</td>
+                    <td>${emp.address}</td>
+                </tr>
+            `);
+        });
+    </script>
+}
